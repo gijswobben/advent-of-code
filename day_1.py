@@ -40,16 +40,13 @@ def elves_calories(input_lines: list[str]) -> Generator[int, None, None]:
     Returns:
         list[int]: list of total calories per elve.
     """
-    result: list[int] = []
     buffer: int = 0
     for line in input_lines:
         if line == "":
-            result.append(buffer)
             yield buffer
             buffer = 0
         else:
             buffer += int(line)
-    result.append(buffer)
     yield buffer
 
 
