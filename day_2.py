@@ -1,7 +1,7 @@
 # https://adventofcode.com/2022/day/2
 
 from enum import IntEnum
-
+from typing import cast
 
 TEST_INPUT = [
     "A Y",
@@ -88,6 +88,9 @@ class Game:
         elif response_gesture is not None and game_outcome is None:
             self.response_gesture = response_gesture
             self.game_outcome = self.determine_outcome(input_gesture, response_gesture)
+        else:
+            self.response_gesture = cast(Gesture, response_gesture)
+            self.game_outcome = cast(GameOutcome, game_outcome)
 
     def determine_outcome(
         self, input_gesture: Gesture, response_gesture: Gesture
