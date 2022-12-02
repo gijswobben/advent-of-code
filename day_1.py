@@ -2,7 +2,6 @@
 
 from typing import Generator
 
-
 TEST_INPUT = [
     "1000",
     "2000",
