@@ -17,4 +17,4 @@ jobs:
       - name: Install dependencies
         run: pipenv install --dev --deploy
       - name: Run tests
-        run: pipenv run pytest day_*.py
+        run: pipenv run pytest challenges/day_*.py
