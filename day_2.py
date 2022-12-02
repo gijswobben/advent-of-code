@@ -2,6 +2,7 @@
 
 from enum import IntEnum
 
+
 TEST_INPUT = [
     "A Y",
     "B X",

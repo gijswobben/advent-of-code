@@ -3,25 +3,28 @@
 from typing import Generator
 
 
-def test_elves_calories():
-    test_input = [
-        "1000",
-        "2000",
-        "3000",
-        "",
-        "4000",
-        "",
-        "5000",
-        "6000",
-        "",
-        "7000",
-        "8000",
-        "9000",
-        "",
-        "10000",
-    ]
+TEST_INPUT = [
+    "1000",
+    "2000",
+    "3000",
+    "",
+    "4000",
+    "",
+    "5000",
+    "6000",
+    "",
+    "7000",
+    "8000",
+    "9000",
+    "",
+    "10000",
+]
 
-    result = sorted(elves_calories(test_input), reverse=True)
+
+def test_elves_calories():
+    """Test based on the example provided in the challenge."""
+
+    result = sorted(elves_calories(TEST_INPUT), reverse=True)
     assert max(result) == 24000
     assert sum(result[:3]) == 45000
 
@@ -48,15 +51,15 @@ def elves_calories(input_lines: list[str]) -> Generator[int, None, None]:
             buffer += int(line)
     result.append(buffer)
     yield buffer
-    # return result
 
 
 if __name__ == "__main__":
 
-    # Read the dta
+    # Read the input
     with open("day_1.txt", "r") as f:
         input_lines = [line.strip() for line in f.readlines()]
 
+    # Determine the output
     result = sorted(elves_calories(input_lines), reverse=True)
     print("Part one:", max(result))
-    print("Part two:", result[0] + result[1] + result[2])
+    print("Part two:", sum(result[:3]))
