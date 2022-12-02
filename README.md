@@ -6,7 +6,7 @@ This repository contains my solutions to the [Advent of code challenge 2022](htt
 I will approach this challenge by using Python, creating 1 script per "day" of the challenge. I will first write a test using the example in the challenge and when the test passes I'll use the created function to generate the answer for the challenge.
 
 ## Usage
-Before running the code, make sure to download the data for the challenges. This can be done by logging in on the the Advent of code website and saving the content of the input file, e.g. https://adventofcode.com/2022/day/1/input. Make sure to store the file in the root of this project and use `day_{DAY_NUMBER}.txt` as the filename (example: `day_1.txt`, `day_2.txt`, ...). Note: The data files are user specific, you will have a different input file and answer!
+Before running the code, make sure to download the data for the challenges. This can be done by logging in on the the Advent of code website and saving the content of the input file, e.g. https://adventofcode.com/2022/day/1/input. Make sure to store the file in the data folder of this project and use `data/day_{DAY_NUMBER}.txt` as the filename (example: `data/day_1.txt`, `data/day_2.txt`, ...). Note: The data files are user specific, you will have a different input file and answer!
 
 To use this repostory and run the code, make sure you have a valid installation of Python (3.10). This project uses `pipenv` to manage dependencies. The following commands will install `pipenv` and the project dependencies.
 
@@ -19,14 +19,14 @@ $ pipenv install --dev
 
 ```shell
 # All challenges
-$ pytest day_*.py
+$ pytest challenges/day_*.py
 
 # Individual challenge
-$ pytest day_1.py
+$ pytest challenges/day_1.py
 ```
 
 To get hte final output for a challenge, the corresponding file can be run using Python:
 
 ```shell
-$ python day_1.py
+$ python challenges/day_1.py
 ```

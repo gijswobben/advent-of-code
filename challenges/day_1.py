@@ -1,5 +1,6 @@
 # https://adventofcode.com/2022/day/1
 
+from pathlib import Path
 from typing import Generator
 
 TEST_INPUT = [
@@ -52,7 +53,7 @@ def elves_calories(input_lines: list[str]) -> Generator[int, None, None]:
 if __name__ == "__main__":
 
     # Read the input
-    with open("day_1.txt", "r") as f:
+    with open(Path(__file__).parents[1] / "data/day_1.txt", "r") as f:
         input_lines = [line.strip() for line in f.readlines()]
 
     # Determine the output
