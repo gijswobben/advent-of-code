@@ -38,7 +38,7 @@ def elves_calories(input_lines: list[str]) -> Generator[int, None, None]:
             and blank lines as separator.
 
     Returns:
-        list[int]: list of total calories per elve.
+        list[int]: list of total calories per elf.
     """
     buffer: int = 0
     for line in input_lines:
