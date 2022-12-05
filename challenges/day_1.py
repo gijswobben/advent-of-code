@@ -1,7 +1,6 @@
 # https://adventofcode.com/2022/day/1
 
 from pathlib import Path
-from typing import Generator
 
 TEST_INPUT = [
     "1000",
@@ -21,33 +20,57 @@ TEST_INPUT = [
 ]
 
 
-def test_elves_calories():
+def test_part_one():
     """Test based on the example provided in the challenge."""
 
-    result = sorted(elves_calories(TEST_INPUT), reverse=True)
-    assert max(result) == 24000
-    assert sum(result[:3]) == 45000
+    result = part_one(TEST_INPUT)
+    assert result == 24000
 
 
-def elves_calories(input_lines: list[str]) -> Generator[int, None, None]:
+def test_part_two():
+    """Test based on the example provided in the challenge."""
+
+    result = part_two(TEST_INPUT)
+    assert result == 45000
+
+
+def parse_input(input_lines: list[str]) -> list[int]:
     """Method that combines groups of lines, separated by an empty line,
     and sums the results.
 
     Args:
-        input_lines (list[str]): list of strings with one number by line
+        input_lines (list[str]): List of strings with one number by line
             and blank lines as separator.
 
     Returns:
-        list[int]: list of total calories per elf.
+        list[int]: List of total calories per elf.
     """
+    output: list[int] = []
     buffer: int = 0
     for line in input_lines:
+
+        # Found a separator, reset the buffer and add the result
         if line == "":
-            yield buffer
+            output.append(buffer)
             buffer = 0
+
+        # Add the number to the buffer
         else:
             buffer += int(line)
-    yield buffer
+
+    # Add the last one before returning
+    output.append(buffer)
+    return output
+
+
+def part_one(input_lines: list[str]) -> int:
+    result = parse_input(input_lines=input_lines)
+    return max(result)
+
+
+def part_two(input_lines: list[str]) -> int:
+    result = sorted(parse_input(input_lines=input_lines), reverse=True)
+    return sum(result[:3])
 
 
 if __name__ == "__main__":
@@ -57,6 +80,8 @@ if __name__ == "__main__":
         input_lines = [line.strip() for line in f.readlines()]
 
     # Determine the output
-    result = sorted(elves_calories(input_lines), reverse=True)
-    print("Part one:", max(result))
-    print("Part two:", sum(result[:3]))
+    result = part_one(input_lines)
+    print("Part one:", result)
+
+    result = part_two(input_lines)
+    print("Part two:", result)
