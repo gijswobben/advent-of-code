@@ -138,6 +138,9 @@ class Game:
     def score(self) -> int:
         """The total score for this game, for the player (response
         gesture).
+
+        Returns:
+            int: The score related to the gesture.
         """
         return self.response_gesture.value + self.game_outcome.value
 
