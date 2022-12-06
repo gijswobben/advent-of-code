@@ -29,3 +29,5 @@ To get hte final output for a challenge, the corresponding file can be run using
 ```shell
 $ python challenges/day_1.py
 ```
+
+Personal recommendation: Use [`pyenv`](https://github.com/pyenv/pyenv) to install Python, [`pyenv virtualenv`](https://github.com/pyenv/pyenv-virtualenv) to create an environment and [`poetry`](https://python-poetry.org/) to install and manage dependencies.
