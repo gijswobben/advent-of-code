@@ -15,7 +15,7 @@ jobs:
           cache: poetry
 
       - name: Install dependencies
-      - run: poetry install
+        run: poetry install
 
       - name: Run tests
         run: poetry run pytest
