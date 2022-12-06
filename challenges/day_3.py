@@ -4,33 +4,10 @@ import functools
 import string
 from pathlib import Path
 
-TEST_INPUT: list[str] = [
-    "vJrwpWtwJgWrhcsFMMfFFhFp",
-    "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
-    "PmmdzqPrVvPwwTWBwg",
-    "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn",
-    "ttgJtRGJQctTZtZT",
-    "CrZsJsPPZsGzwwsLwLmpwMDw",
-]
-
 SCORE: dict[str, int] = {
     character: index + 1
     for index, character in enumerate(string.ascii_lowercase + string.ascii_uppercase)
 }
-
-
-def test_part_one():
-    """Test based on the example provided in the challenge."""
-
-    result = part_one(TEST_INPUT)
-    assert result == 157
-
-
-def test_part_two():
-    """Test based on the example provided in the challenge."""
-
-    result = part_two(TEST_INPUT)
-    assert result == 70
 
 
 def part_one(input_lines: list[str]) -> int:

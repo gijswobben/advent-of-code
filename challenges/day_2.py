@@ -4,25 +4,6 @@ from enum import IntEnum
 from pathlib import Path
 from typing import cast
 
-TEST_INPUT = [
-    "A Y",
-    "B X",
-    "C Z",
-]
-
-
-def test_rock_paper_scissors_part_one():
-    """Test based on the example provided in the challenge."""
-
-    score = rock_paper_scissors_part_one(TEST_INPUT)
-    assert score == 15
-
-
-def test_rock_paper_scissors_part_two():
-    """Test based on the example provided in the challenge."""
-    score = rock_paper_scissors_part_two(TEST_INPUT)
-    assert score == 12
-
 
 class Gesture(IntEnum):
     ROCK = 1
@@ -145,7 +126,7 @@ class Game:
         return self.response_gesture.value + self.game_outcome.value
 
 
-def rock_paper_scissors_part_one(input_lines: list[str]) -> int:
+def part_one(input_lines: list[str]) -> int:
     """Part one assumes the second value in the game input is the
     response gesture.
 
@@ -166,7 +147,7 @@ def rock_paper_scissors_part_one(input_lines: list[str]) -> int:
     return total
 
 
-def rock_paper_scissors_part_two(input_lines: list[str]) -> int:
+def part_two(input_lines: list[str]) -> int:
     """Part two assumes the second value in the game input is the
     desired outcome of the game.
 
@@ -194,9 +175,9 @@ if __name__ == "__main__":
         input_lines = [line.strip() for line in f.readlines()]
 
     # Determine the output for part one
-    score = rock_paper_scissors_part_one(input_lines)
+    score = part_one(input_lines)
     print("Part one:", score)
 
     # Determine the output for part two
-    score = rock_paper_scissors_part_two(input_lines)
+    score = part_two(input_lines)
     print("Part two:", score)
