@@ -38,21 +38,21 @@ Full walkthrough (example for MacOs):
 
 ```shell
 # Install Python and make it the global Python
-pyenv install 3.10.8
-pyenv global 3.10.8
+$ pyenv install 3.10.8
+$ pyenv global 3.10.8
 
 # Install Poetry
-curl -sSL https://install.python-poetry.org | python -
+$ curl -sSL https://install.python-poetry.org | python -
 
 # Install package
-poetry install --with dev
+$ poetry install --with dev
 
 # Run tests
-poetry run pytest
+$ poetry run pytest
 
 # Download all data files
-poetry run aoc
+$ poetry run aoc
 
 # Get results for day 1
-poetry run python challenges/day_1.py
+$ poetry run python challenges/day_1.py
 ```
