@@ -7,14 +7,15 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-          cache: pipenv
-      - name: Install pipenv
-        run: pip install pipenv==2022.11.30
+          cache: poetry
+
       - name: Install dependencies
-        run: pipenv install --dev --deploy
+      - run: poetry install
+
       - name: Run tests
-        run: pipenv run pytest challenges/day_*.py
+        run: poetry run pytest
