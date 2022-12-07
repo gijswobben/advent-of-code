@@ -1,4 +1,4 @@
-from challenges.year_2021.day_8 import part_one, part_two
+from aoc.year_2021.day_8 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe",

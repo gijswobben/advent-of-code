@@ -5,7 +5,7 @@ description = "Results and work for the 'Advent of code 2022'."
 authors = ["Gijs Wobben <gijswobben@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/gijswobben/advent-of-code-2022"
-packages = [{include = "challenges"}]
+packages = [{include = "aoc", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -40,4 +40,4 @@ extend-ignore = "E203"
 max-line-length = 88
 
 [tool.poetry.scripts]
-aoc = 'challenges.cli:cli'
+aoc = 'aoc.cli:cli'

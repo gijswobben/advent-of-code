@@ -1,4 +1,4 @@
-from challenges.year_2022.day_6 import part_one, part_two
+from aoc.year_2022.day_6 import part_one, part_two
 
 TEST_INPUT_1: str = "bvwbjplbgvbhsrlpgdmjqwftvncz"
 TEST_INPUT_2: str = "nppdvjthqldpwncqszvftbrmjlhg"

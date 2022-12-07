@@ -1,4 +1,4 @@
-from challenges.year_2022.day_2 import part_one, part_two
+from aoc.year_2022.day_2 import part_one, part_two
 
 TEST_INPUT = [
     "A Y",

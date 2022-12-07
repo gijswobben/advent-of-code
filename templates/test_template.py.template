@@ -1,4 +1,4 @@
-from challenges.year_{{ year }}.day_{{ day }} import part_one, part_two
+from aoc.year_{{ year }}.day_{{ day }} import part_one, part_two
 
 TEST_INPUT: list[str] = []
 

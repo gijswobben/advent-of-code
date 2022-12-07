@@ -1,4 +1,4 @@
-from challenges.year_2021.day_1 import part_one, part_two
+from aoc.year_2021.day_1 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "199",
