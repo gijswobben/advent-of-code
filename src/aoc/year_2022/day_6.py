@@ -32,7 +32,7 @@ def part_two(input_line: str) -> int:
 if __name__ == "__main__":
 
     # Read the input
-    with open(Path(__file__).parents[2] / "data/year_2022/day_6.txt", "r") as f:
+    with open(Path(__file__).parents[3] / "data/year_2022/day_6.txt", "r") as f:
         input_line = f.read()
 
     # Determine the output for part one

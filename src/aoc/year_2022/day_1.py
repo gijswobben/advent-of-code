@@ -45,7 +45,7 @@ def part_two(input_lines: list[str]) -> int:
 if __name__ == "__main__":
 
     # Read the input
-    with open(Path(__file__).parents[2] / "data/year_2022/day_1.txt", "r") as f:
+    with open(Path(__file__).parents[3] / "data/year_2022/day_1.txt", "r") as f:
         input_lines = [line.strip() for line in f.readlines()]
 
     # Determine the output
