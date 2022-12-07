@@ -8,7 +8,7 @@ I will approach this challenge by using Python, creating 1 script per "day" of t
 ## Usage
 Before running the code, make sure to download the data for the challenges. This can be done by logging in on the the Advent of code website and saving the content of the input file, e.g. https://adventofcode.com/2022/day/1/input. Make sure to store the file in the data folder of this project and use `data/year_{YEAR_NUMBER}/day_{DAY_NUMBER}.txt` as the filename (example: `data/year_2022/day_1.txt`, `data/year_2022/day_2.txt`, ...). Note: The data files are user specific, you will have a different input file and answer!
 
-Alternatively you can run the `aoc` command (available after installing this package) to download all available data files for a particular year.
+Alternatively you can run the `aoc download` command (available after installing this package) to download all available data files for a particular year, day or all years and days.
 
 To use this repostory and run the code, make sure you have a valid installation of Python (3.10). This project uses [Poetry](https://python-poetry.org/) to manage dependencies. Use the following command to install all dependencies:
 
@@ -23,16 +23,16 @@ $ poetry install
 $ pytest
 
 # All challenges for a particular year
-$ pytest challenges/year_2022/day_*.py
+$ pytest tests/year_2022/test_day_*.py
 
 # Individual challenge
-$ pytest challenges/year_2022/day_1.py
+$ pytest tests/year_2022/test_day_1.py
 ```
 
 To get the final output for a challenge, the corresponding file can be run using Python:
 
 ```shell
-$ python challenges/year_2022/day_1.py
+$ python src/aoc/year_2022/day_1.py
 ```
 
 Personal recommendation: Use [`pyenv`](https://github.com/pyenv/pyenv) to install Python, [`pyenv virtualenv`](https://github.com/pyenv/pyenv-virtualenv) to create an environment and [`poetry`](https://python-poetry.org/) to install and manage dependencies.
@@ -54,8 +54,8 @@ $ poetry install --with dev
 $ poetry run pytest
 
 # Download all data files
-$ poetry run aoc
+$ poetry run aoc download
 
 # Get results for day 1
-$ poetry run python challenges/year_2022/day_1.py
+$ poetry run python src/aoc/year_2022/day_1.py
 ```
