@@ -21,6 +21,7 @@ isort = "^5.10.1"
 pre-commit = "^2.20.0"
 flake8 = "^6.0.0"
 types-requests = "^2.28.11.5"
+jinja2 = "^3.1.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -38,4 +39,4 @@ extend-ignore = "E203"
 max-line-length = 88
 
 [tool.poetry.scripts]
-aoc = 'challenges.download_data:download_datafiles'
+aoc = 'challenges.cli:cli'
