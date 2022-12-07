@@ -1,4 +1,4 @@
-from challenges.day_4 import part_one, part_two
+from challenges.year_2022.day_4 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "2-4,6-8",

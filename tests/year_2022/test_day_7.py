@@ -1,4 +1,4 @@
-from challenges.day_7 import part_one, part_two
+from challenges.year_2022.day_7 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "$ cd /",

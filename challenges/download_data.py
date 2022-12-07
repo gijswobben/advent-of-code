@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 import browser_cookie3
@@ -12,10 +13,11 @@ DEFAULT_YEAR = NOW.year if NOW.month == 12 else NOW.year - 1
 
 def download_file(year: int, day: int):
     try:
+        os.makedirs(f"data/year_{year}", exist_ok=True)
         r = requests.get(f"https://adventofcode.com/{year}/day/{day}/input", cookies=cj)
         r.raise_for_status()
         click.echo(click.style(f"Downloaded file for day {day}", fg="green"), err=True)
-        with open(f"data/day_{day}.txt", "wb") as f:
+        with open(f"data/year_{year}/day_{day}.txt", "wb") as f:
             f.write(r.content)
     except Exception as e:
         if (
