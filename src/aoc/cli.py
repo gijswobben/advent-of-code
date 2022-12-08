@@ -70,12 +70,12 @@ def new(year: int, day: int):
     download the data."""
 
     # Get the paths
-    templates_folder = Path(__file__).parents[1] / "templates"
+    templates_folder = Path(__file__).parents[2] / "templates"
     challenge_filepath = (
-        Path(__file__).parents[1] / "challenges" / f"year_{year}" / f"day_{day}.py"
+        Path(__file__).parents[2] / "src" / "aoc" / f"year_{year}" / f"day_{day}.py"
     )
     test_filepath = (
-        Path(__file__).parents[1] / "tests" / f"year_{year}" / f"test_day_{day}.py"
+        Path(__file__).parents[2] / "tests" / f"year_{year}" / f"test_day_{day}.py"
     )
 
     # Check if the path exists (confirm overwrite if they do)
