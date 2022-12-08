@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import functools
 from enum import Enum
 from pathlib import Path
 from typing import Generator
+
+import numpy as np
 
 
 class Direction(Enum):
@@ -213,14 +216,138 @@ class Forrest:
         print("\n".join(output))
 
 
+class ForrestV2:
+    """High performance version of the Forrest class.
+
+    This implementation doesn't make individual trees but represents the
+    forrest as a Numpy matrix.
+
+    Args:
+        trees (list[list[int]]): Multidimensional array of trees (grid).
+    """
+
+    def __init__(self, trees: list[list[int]]) -> None:
+        self.grid = np.array(trees)
+
+    @property
+    def visible(self) -> np.ndarray:
+        """Numpy array of the same shape as the forrest. 1 indicates a
+        tree is visible, 0 indicates a tree is not visible.
+        """
+
+        # Default: Everything is invisible
+        visible = np.zeros_like(self.grid)
+
+        # Loop all trees
+        for y in range(self.grid.shape[1]):
+            for x in range(self.grid.shape[0]):
+                height = self.grid[y, x]
+
+                # Get trees in all directions
+                left = self.grid[y, :x]
+                right = self.grid[y, x + 1 :]
+                top = self.grid[:y, x]
+                bottom = self.grid[y + 1 :, x]
+                all_directions = [left, right, top, bottom]
+
+                # If a tree is on the edge, it is visible
+                if any([len(direction) == 0 for direction in all_directions]):
+                    visible[y, x] = 1
+
+                # If the tallest tree is lower than this tree, it is
+                # visible
+                elif any([max(direction) < height for direction in all_directions]):
+                    visible[y, x] = 1
+
+        return visible
+
+    @property
+    def scenic_scores(self) -> np.ndarray:
+        """Numpy array of the same shape as the forrest. Each value
+        represents the "Scenic score" for a tree in that particular
+        place of the grid.
+        """
+
+        # Default: Everything is zero
+        scores = np.zeros_like(self.grid)
+
+        # Loop all trees
+        for y in range(self.grid.shape[0]):
+            for x in range(self.grid.shape[1]):
+                height = self.grid[y, x]
+
+                # Get trees in all directions
+                left = np.flip(self.grid[y, :x])
+                if len(left) > 0 and np.max(left) >= height:
+                    left_index = int(np.argmax(height <= left))
+                    left = left[: left_index + 1]
+                right = self.grid[y, x + 1 :]
+                if len(right) > 0 and np.max(right) >= height:
+                    right_index = int(np.argmax(height <= right))
+                    right = right[: right_index + 1]
+                top = np.flip(self.grid[:y, x])
+                if len(top) > 0 and np.max(top) >= height:
+                    top_index = int(np.argmax(height <= top))
+                    top = top[: top_index + 1]
+                bottom = self.grid[y + 1 :, x]
+                if len(bottom) > 0 and np.max(bottom) >= height:
+                    bottom_index = int(np.argmax(height <= bottom))
+                    bottom = bottom[: bottom_index + 1]
+
+                all_directions = [
+                    len(left),
+                    len(right),
+                    len(top),
+                    len(bottom),
+                ]
+
+                scores[y, x] = functools.reduce(
+                    lambda a, b: a * b,
+                    all_directions,
+                )
+
+        return scores
+
+    @classmethod
+    def from_text(self, input_lines: list[str]) -> ForrestV2:
+        """Create a new Forrest object from a list of texts.
+
+        Args:
+            input_lines (list[str]): The lines of text, each containing
+                a list of trees
+
+        Returns:
+            Forrest: The resulting ForrestV2 object.
+        """
+        trees: list[list[int]] = []
+        for line in input_lines:
+            tree_line: list[int] = []
+            for element in line:
+                tree_line.append(int(element))
+            trees.append(tree_line)
+        return ForrestV2(trees=trees)
+
+
 def part_one(input_lines: list[str]) -> int:
-    forrest = Forrest.from_text(input_lines)
-    return len([tree for tree in forrest if tree.is_visible])
+
+    # Verbose and slow method, for educational purposes
+    # forrest = Forrest.from_text(input_lines)
+    # return len([tree for tree in forrest if tree.is_visible])
+
+    # Faster Numpy array solution
+    forrest = ForrestV2.from_text(input_lines)
+    return np.sum(forrest.visible)
 
 
 def part_two(input_lines: list[str]) -> int:
-    forrest = Forrest.from_text(input_lines)
-    return max([tree.scenic_score for tree in forrest])
+
+    # Verbose and slow method, for educational purposes
+    # forrest = Forrest.from_text(input_lines)
+    # return max([tree.scenic_score for tree in forrest])
+
+    # Faster Numpy array solution
+    forrest = ForrestV2.from_text(input_lines)
+    return np.max(forrest.scenic_scores)
 
 
 if __name__ == "__main__":
