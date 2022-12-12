@@ -39,7 +39,7 @@ class Board:
 
         # Check for the win condition
         if self.marks.all(axis=0).any() or self.marks.all(axis=1).any():
-            numbers_marks_removed = self.numbers.where(self.marks is False, None)
+            numbers_marks_removed = self.numbers.where(~self.marks, None)
             total = numbers_marks_removed.sum().sum()
             self.finished = True
             return total * number
