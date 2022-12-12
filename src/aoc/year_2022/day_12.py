@@ -228,7 +228,7 @@ def part_two(input_lines: list[str]) -> int:
             shortest_path_lengths.append(
                 len(heights_map.find_shortest_path(start=start)) - 1
             )
-        except:
+        except Exception:
             pass
 
     # Get the length shortest path

@@ -81,13 +81,13 @@ def new(year: int, day: int):
     # Check if the path exists (confirm overwrite if they do)
     if challenge_filepath.exists():
         click.confirm(
-            f"Challenge file exists, do you want to overwrite?",
+            "Challenge file exists, do you want to overwrite?",
             default=False,
             abort=True,
         )
     if test_filepath.exists():
         click.confirm(
-            f"Test file exists, do you want to overwrite?", default=False, abort=True
+            "Test file exists, do you want to overwrite?", default=False, abort=True
         )
 
     # Get templates folder
@@ -137,9 +137,6 @@ def new(year: int, day: int):
 )
 def download(year: int | None, day: int | None = None):
     """Download data files from Avent of Code."""
-
-    # Get any cookies from a browser (any browser)
-    cj = browser_cookie3.load(domain_name=".adventofcode.com")
 
     # Download only a single day
     if day is not None and year is not None:
