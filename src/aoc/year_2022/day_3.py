@@ -10,18 +10,36 @@ SCORE: dict[str, int] = {
 }
 
 
+class Rucksack:
+    """Represents a single rucksack of an elf. Each Rucksack has 2
+    compartments that hold half of the items the elf is carrying.
+
+    Args:
+        items (list[str]): List of items the elf is carrying.
+    """
+
+    def __init__(self, items: list[str]) -> None:
+        self.compartments: tuple[list[str], list[str]] = (
+            items[: len(items) // 2],
+            items[len(items) // 2 :],
+        )
+
+    @property
+    def items(self) -> list[str]:
+        return self.compartments[0] + self.compartments[1]
+
+
 def part_one(input_lines: list[str]) -> int:
 
     # Loop over the lines
     score = 0
     for line in input_lines:
 
-        # Determine the midpoint for this line
-        midpoint = len(line) // 2
+        # Create a rucksack from the input line
+        rucksack = Rucksack(items=list(line))
 
-        # Find the common character in the characters before and after
-        # the midpoint
-        common = list(set(line[:midpoint]) & set(line[midpoint:]))
+        # Find the common character in the compartments of the rucksack
+        common = list(set(rucksack.compartments[0]) & set(rucksack.compartments[1]))
 
         # Lookup the score for the common character
         score += SCORE[common[0]]
@@ -37,11 +55,14 @@ def part_two(input_lines: list[str]) -> int:
     groups = zip(*(iter(input_lines),) * group_size)
     for group in groups:
 
-        # Determine the common character in the lines of this group
+        # Create a list of all the rucksacks in this group
+        rucksacks = [Rucksack(items=list(elf)) for elf in group]
+
+        # Determine the common character in the rucksacks of this group
         common = list(
             functools.reduce(
                 lambda a, b: a.intersection(b),  # type: ignore
-                [set(element) for element in group],
+                [set(rucksack.items) for rucksack in rucksacks],
             )
         )
 

@@ -3,43 +3,62 @@
 from pathlib import Path
 
 
-def parse_input(input_lines: list[str]) -> list[int]:
+class Elf:
+    def __init__(self, items: list[int] | None = None):
+        self.items = items if items is not None else []
+
+    def add_item(self, calories: int):
+        self.items.append(calories)
+
+    @property
+    def total_calories(self) -> int:
+        return sum(self.items)
+
+
+def parse_input(input_lines: list[str]) -> list[Elf]:
     """Method that combines groups of lines, separated by an empty line,
-    and sums the results.
+    and creates elves from the result.
 
     Args:
         input_lines (list[str]): List of strings with one number by line
             and blank lines as separator.
 
     Returns:
-        list[int]: List of total calories per elf.
+        list[Elf]: List of Elves.
     """
-    output: list[int] = []
-    buffer: int = 0
+    elves: list[Elf] = [Elf()]
     for line in input_lines:
 
-        # Found a separator, reset the buffer and add the result
+        # Found a separator, all next items belong to the next elf
         if line == "":
-            output.append(buffer)
-            buffer = 0
+            elves.append(Elf())
 
-        # Add the number to the buffer
+        # Add the number to the items of the last elf
         else:
-            buffer += int(line)
+            elves[-1].add_item(calories=int(line))
 
-    # Add the last one before returning
-    output.append(buffer)
-    return output
+    return elves
 
 
 def part_one(input_lines: list[str]) -> int:
-    result = parse_input(input_lines=input_lines)
-    return max(result)
+
+    # Parse the input into a list of elves carrying items
+    elves = parse_input(input_lines=input_lines)
+
+    # Return the total calories from the elf with the most calories
+    return max([elf.total_calories for elf in elves])
 
 
 def part_two(input_lines: list[str]) -> int:
-    result = sorted(parse_input(input_lines=input_lines), reverse=True)
-    return sum(result[:3])
+
+    # Parse the input into a list of elves carrying items
+    elves = parse_input(input_lines=input_lines)
+
+    # Sort the elves by total calories
+    elves.sort(key=lambda elf: elf.total_calories, reverse=True)
+
+    # Return the sum of the top 3
+    return sum([elf.total_calories for elf in elves[:3]])
 
 
 if __name__ == "__main__":
