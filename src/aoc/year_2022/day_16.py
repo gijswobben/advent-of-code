@@ -2,23 +2,17 @@
 
 from __future__ import annotations
 
+import functools
 import itertools
 import re
 from collections import deque
 from pathlib import Path
-from typing import Any
 
 import networkx as nx
 
 VALVE_PATTERN = re.compile(
     r"Valve (?P<valve_name>\w+) has flow rate=(?P<flow_rate>\d+); tunnels? leads? to valves? (?P<other_valves>.+)"
 )
-
-
-def all_combinations(any_list: list) -> itertools.chain[tuple[Any, ...]]:
-    return itertools.chain.from_iterable(
-        itertools.combinations(any_list, i + 1) for i in range(len(any_list))
-    )
 
 
 class Valve:
@@ -100,241 +94,204 @@ class Cave:
     def __init__(self, valves: list[Valve]) -> None:
         self.valves: dict[str, Valve] = {valve.name: valve for valve in valves}
 
-        # Create a graph based on the layout of the valves
+        # Create a graph based on the layout of the valves. This graph
+        # will be used to find paths between the caves
         self.graph = nx.Graph()
         for valve in self.valves.values():
             self.graph.add_edges_from(
                 [(valve, self.valves[other]) for other in valve.tunnels]
             )
 
-    def release_pressure(self, total_time: int = 30) -> int:
+    @classmethod
+    def from_text(cls, input_lines: list[str]) -> Cave:
+        """Create a new Cave object from text input.
 
-        # Pre-calculate all the distances between node pairs for speed
+        Args:
+            input_lines (list[str]): The lines of text containing
+                definitions of the valves.
+
+        Raises:
+            Exception: Raised when an invalid input line was discovered.
+
+        Returns:
+            Cave: The resulting Cave object.
+        """
+
+        # Create a list of Valves
+        valves: list[Valve] = []
+        for line in input_lines:
+
+            match = re.search(VALVE_PATTERN, line)
+            if match is None:
+                raise Exception("Invalid input")
+            else:
+                valves.append(
+                    Valve(
+                        name=match.group("valve_name"),
+                        flow_rate=int(
+                            match.group("flow_rate"),
+                        ),
+                        tunnels=[
+                            tunnel.strip()
+                            for tunnel in match.group("other_valves").split(",")
+                        ],
+                    )
+                )
+
+        return Cave(valves=valves)
+
+    def list_all_paths(self, start: Valve, time: int) -> list[CavePath]:
+        """List all possible paths through the cave system, from a
+        particular start valve.
+
+        Args:
+            start (Valve): The valve to start from.
+            time (int): The time limit for moving through the caves.
+
+        Returns:
+            list[CavePath]: List of discovered paths.
+        """
+
+        # Filter to only valves that have a flow rate
+        significant_valves = [
+            valve
+            for valve in self.valves.values()
+            if valve.flow_rate > 0 or valve == start
+        ]
+
+        # Pre-calculate all the distances between node pairs for
+        # speed
         distances: dict[tuple[Valve, Valve], int] = {
             (source, target): nx.shortest_path_length(self.graph, source, target)
             for source, target in itertools.product(
-                [
-                    valve
-                    for valve in self.valves.values()
-                    if valve.flow_rate > 0 or valve.name == "AA"
-                ],
-                [
-                    valve
-                    for valve in self.valves.values()
-                    if valve.flow_rate > 0 or valve.name == "AA"
-                ],
+                significant_valves, significant_valves
             )
+            if source != target
         }
 
-        def _recurse(
-            current_valve: Valve,
-            open_valves: list[Valve],
-            time_left: int,
-        ) -> int:
+        # Create a queue of paths to further explore
+        queue: deque[CavePath] = deque([CavePath(time=time, visited=[start])])
+        complete_paths: list[CavePath] = []
+        while queue:
 
-            # Calculate the pressure released from all open valves
-            pressure_released = sum(
-                [open_valve.flow_rate for open_valve in open_valves]
-            )
+            # Get the first item in the queue (FIFO)
+            path = queue.popleft()
+            complete_paths.append(path)
 
-            # Stop searching if there is no time left to move and open a
-            # valve
-            if time_left <= 1:
-                return pressure_released
+            # Skip this path if there is not enough time to explore
+            # additional valves
+            if path.time <= 3:
+                continue
 
-            # Loop all valves and calculate the potential yield from
-            # moving to that valve
-            potential_yields: list[tuple[Valve, int]] = []
-            for valve in self.valves.values():
-
-                # Skip open valves or 0 flow rate valves
-                if valve in open_valves or valve.flow_rate == 0:
-                    continue
-
-                # Get the arrival time if we choose to travel to this
-                # valve
-                time_left_at_arrival = time_left - distances[(current_valve, valve)]
-                if time_left_at_arrival <= 1:
-                    continue
-
-                # Calculate the potential yield from opening the target
-                # valve (takes 1 minute to open)
-                potential_yield = pressure_released * (
-                    distances[(current_valve, valve)]
-                ) + _recurse(
-                    valve,
-                    open_valves=[*open_valves, valve],
-                    time_left=time_left_at_arrival - 1,
-                )
-                potential_yields.append((valve, potential_yield))
-
-            # No more moves (e.g. every valve is open)
-            if len(potential_yields) == 0:
-                return pressure_released + _recurse(
-                    current_valve=current_valve,
-                    open_valves=open_valves,
-                    time_left=time_left - 1,
-                )
-
-            # Get the next best option by sorting the valves by
-            # potential yield
-            else:
-                next_valve = sorted(
-                    potential_yields, key=lambda row: row[1], reverse=True
-                )[0][1]
-                return pressure_released + next_valve
-
-        return _recurse(
-            current_valve=self.valves["AA"], time_left=total_time, open_valves=[]
-        )
-
-    def release_pressure_with_elephant(
-        self, total_time: int = 26, n_actors: int = 2
-    ) -> int:
-        def find_paths(start: Valve, time_remaining: int):
-
-            # Filter to only valves that have a flow rate
-            significant_valves = [
+            # Keep discovering new paths if there is enough time to move
+            # and open, and the valve adds value and the valve isn't
+            # open yet
+            new_paths = []
+            targets = [
                 valve
-                for valve in self.valves.values()
-                if valve.flow_rate > 0 or valve == start
+                for valve in significant_valves
+                if valve not in path.visited
+                and path.time > (distances[(path.visited[-1], valve)] + 2)
             ]
 
-            # Pre-calculate all the distances between node pairs for
-            # speed
-            distances: dict[tuple[Valve, Valve], int] = {
-                (source, target): nx.shortest_path_length(self.graph, source, target)
-                for source, target in itertools.product(
-                    significant_valves, significant_valves
+            # Go over all possible targets and create a new "path"
+            # ending in the target
+            for target in targets:
+                new_path = path.copy()
+                new_path.add(
+                    valve=target,
+                    time=path.time - (distances[(path.visited[-1], target)] + 1),
                 )
-            }
+                new_path.total_pressure_released += (
+                    path.time - (distances[(path.visited[-1], target)] + 1)
+                ) * target.flow_rate
+                new_paths.append(new_path)
 
-            stack: deque[CavePath] = deque([CavePath(time=total_time, visited=[start])])
-            complete_paths: list[CavePath] = []
-            while stack:
-                path = stack.popleft()
+            # Add the newly discovered options to the stack
+            if new_paths:
+                queue.extend(new_paths)
 
+            # This was the last valve in the search, stop searching
+            # this path
+            else:
                 complete_paths.append(path)
 
-                if path.time <= 3:
-                    continue
+        return complete_paths
 
-                new_paths = []
+    def calculate_max_pressure_released(
+        self, total_time: int, n_actors: int = 1
+    ) -> int:
+        """Calculate the maximum pressure that N actors can release
+        within a certain amount of time.
 
-                # Keep moving if there is enough time to move and open and
-                # the valve adds value and the valve isn't open yet
-                targets = [
-                    valve
-                    for valve in significant_valves
-                    if valve not in path.visited
-                    and time_remaining > (distances[(path.visited[-1], valve)] + 1)
-                ]
+        Args:
+            total_time (int, optional): The total time the actors can
+                move.
+            n_actors (int, optional): The number of actors in the cave
+                system. Defaults to 1.
 
-                # Go over all possible targets and create a new "path"
-                # ending in the target
-                for target in targets:
-                    new_path = path.copy()
-                    new_path.add(
-                        valve=target,
-                        time=path.time - (distances[(path.visited[-1], target)] + 1),
-                    )
-                    new_path.total_pressure_released += (
-                        path.time - (distances[(path.visited[-1], target)] + 1)
-                    ) * target.flow_rate
-                    new_paths.append(new_path)
-
-                # Add the newly discovered options to the stack
-                if new_paths:
-                    stack.extend(new_paths)
-
-                # This was the last valve in the search, stop searching
-                # this path
-                else:
-                    complete_paths.append(path)
-
-            return complete_paths
+        Returns:
+            int: The maximum total pressure released.
+        """
 
         # All paths that fit in the time
-        all_paths = find_paths(start=self.valves["AA"], time_remaining=total_time)
+        all_paths = self.list_all_paths(start=self.valves["AA"], time=total_time)
 
         # Sort the paths based on highest pressure released
         all_paths.sort(key=lambda p: p.total_pressure_released, reverse=True)
 
-        # Loop over the sorted list of paths
-        max_pressure_released = 0
-        for i, path_a in enumerate(all_paths):
+        # If there is only 1 actor, get the path with the highest
+        # pressure released (first item of the already sorted list)
+        if n_actors == 1:
+            return all_paths[0].total_pressure_released
 
-            x = set(tuple(path_a.visited[1:]))
+        # If there are more actors, find the optimal non-overlapping set
+        # of paths
+        else:
 
-            # Go over the rest of the list
-            for path_b in all_paths[i + 1 :]:
+            # Keep track of the combination that results in the highest
+            # pressure released and loop all combinations of paths
+            max_pressure_released = 0
+            for combination in itertools.combinations(all_paths, n_actors):
+
+                # Sum the released pressure for this combination
+                total_pressure = sum(
+                    [valve.total_pressure_released for valve in combination]
+                )
+
+                # Only proceed if this combination results in a better
+                # pressure release
+                if total_pressure <= max_pressure_released:
+                    continue
+
+                # Create a set of visited nodes, excluding the start
+                # node, for every actor and make sure they don't overlap
+                sets = [set(valve.visited[1:]) for valve in combination]
                 if (
-                    path_a.total_pressure_released + path_b.total_pressure_released
-                    <= max_pressure_released
+                    len(functools.reduce(lambda m, n: set.intersection(m, n), sets))
+                    == 0
                 ):
-                    break
+                    max_pressure_released = total_pressure
 
-                y = set(tuple(path_b.visited[1:]))
-
-                if len(set.intersection(x, y)) == 0:
-                    if (
-                        path_a.total_pressure_released + path_b.total_pressure_released
-                        > max_pressure_released
-                    ):
-                        max_pressure_released = (
-                            path_a.total_pressure_released
-                            + path_b.total_pressure_released
-                        )
-
-        return max_pressure_released
+            return max_pressure_released
 
 
 def part_one(input_lines: list[str]) -> int:
-    valves: list[Valve] = []
-    for line in input_lines:
-        match = re.search(VALVE_PATTERN, line)
-        if match is None:
-            raise Exception("Invalid input")
-        else:
-            valve = Valve(
-                name=match.group("valve_name"),
-                flow_rate=int(
-                    match.group("flow_rate"),
-                ),
-                tunnels=[
-                    tunnel.strip() for tunnel in match.group("other_valves").split(",")
-                ],
-            )
-            valves.append(valve)
 
-    cave = Cave(valves=valves)
+    # Parse the input into a cave system with valves
+    cave = Cave.from_text(input_lines)
 
-    total_pressure_released = cave.release_pressure()
-    return total_pressure_released
+    # Calculate the total pressure that can be released
+    return cave.calculate_max_pressure_released(total_time=30, n_actors=1)
 
 
 def part_two(input_lines: list[str]) -> int:
-    valves: list[Valve] = []
-    for line in input_lines:
-        match = re.search(VALVE_PATTERN, line)
-        if match is None:
-            raise Exception("Invalid input")
-        else:
-            valve = Valve(
-                name=match.group("valve_name"),
-                flow_rate=int(
-                    match.group("flow_rate"),
-                ),
-                tunnels=[
-                    tunnel.strip() for tunnel in match.group("other_valves").split(",")
-                ],
-            )
-            valves.append(valve)
 
-    cave = Cave(valves=valves)
+    # Parse the input into a cave system with valves
+    cave = Cave.from_text(input_lines)
 
-    total_pressure_released = cave.release_pressure_with_elephant()
-    return total_pressure_released
+    # Calculate the total pressure that can be released
+    return cave.calculate_max_pressure_released(total_time=26, n_actors=2)
 
 
 if __name__ == "__main__":
