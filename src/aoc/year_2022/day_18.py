@@ -212,6 +212,3 @@ if __name__ == "__main__":
     # Determine the output for part two
     result = part_two(input_lines)
     print("Part two:", result)
-
-# Not correct: 4178 too high
-# 4128
