@@ -1,4 +1,4 @@
-![Unittests](https://github.com/gijswobben/advent-of-code-2023/actions/workflows/tests.yaml/badge.svg) ![Python version](https://img.shields.io/badge/Python-3.11-blue?style=flat&logo=python&logoColor=white&label=Python) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![Unittests](https://github.com/gijswobben/advent-of-code/actions/workflows/tests.yaml/badge.svg) ![Python version](https://img.shields.io/badge/Python-3.11-blue?style=flat&logo=python&logoColor=white&label=Python) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # Advent of code
 
