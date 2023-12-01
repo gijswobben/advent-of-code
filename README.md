@@ -14,7 +14,7 @@ To use this repostory and run the code, make sure you have a valid installation 
 $ poetry install
 ```
 
-## Starting a new challenge
+### Starting a new challenge
 
 To start a new challenge, run the following command:
 
@@ -24,11 +24,11 @@ $ poetry run aoc new
 
 This command will prompt for the year and day that you want to participate in. After that it will create a new test file and a new script file in the corresponding year and day folder. This command will also download the data file for the challenge and place it in the `data` folder.
 
-## Downloading data
+### Downloading data
 
 You can run also download the data files manually with the `poetry run aoc download` command (available after installing this package). This will download all available data files for a particular year, day or all years and days (since 2015).
 
-## Testing
+### Testing
 
 `pytest` is used as a testing framework and can be used to test an individual challenge or all challenges with these commands:
 
@@ -49,7 +49,7 @@ To get the final output for a challenge, the corresponding file can be run using
 $ poetry run python src/aoc/year_2023/day_1.py
 ```
 
-## Development environment
+### Development environment
 
 Personal recommendation: Use [`pyenv`](https://github.com/pyenv/pyenv) to install Python, [`pyenv virtualenv`](https://github.com/pyenv/pyenv-virtualenv) to create an environment and [`poetry`](https://python-poetry.org/) to install and manage dependencies.
 
