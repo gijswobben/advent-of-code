@@ -1,13 +1,36 @@
-# https://adventofcode.com/{{ year }}/day/{{ day }}
+"""Assignment for day {{ day }} of {{ year }} Advent of Code.
+
+https://adventofcode.com/{{ year }}/day/{{ day }}
+"""
 
 from pathlib import Path
 
 
 def part_one(input_lines: list[str]) -> int:
+    """Produce results for assignment one.
+
+    Args:
+    ----
+        input_lines (list[str]): The input lines (strings).
+
+    Returns:
+    -------
+        int: The result for assignment one.
+    """
     return 0
 
 
 def part_two(input_lines: list[str]) -> int:
+    """Produce results for assignment two.
+
+    Args:
+    ----
+        input_lines (list[str]): The input lines (strings).
+
+    Returns:
+    -------
+        int: The result for assignment two.
+    """
     return 0
 
 
