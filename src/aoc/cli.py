@@ -4,11 +4,11 @@ from datetime import datetime
 from pathlib import Path
 from random import choice, randint, seed
 
-import browser_cookie3
+import browser_cookie3  # type: ignore
 import click
 import requests
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pyfiglet import Figlet
+from pyfiglet import Figlet  # type: ignore
 
 # Fix the random seed (for generating christmas ornaments in the banner)
 seed(42)
@@ -135,7 +135,7 @@ def get_banner(tree_levels: int = 4) -> str:
     return tree_text + "\n" + separator + "\n" + text
 
 
-def download_file(year: int, day: int):
+def download_file(year: int, day: int) -> None:
     try:
         os.makedirs(f"data/year_{year}", exist_ok=True)
         r = requests.get(
@@ -164,8 +164,7 @@ def download_file(year: int, day: int):
 
 
 @click.group()
-def cli():
-
+def cli() -> None:
     # Show the banner before each command
     click.echo(get_banner())
     ...
@@ -192,7 +191,7 @@ def cli():
     + click.style("day", fg="green")
     + " for which you'd like to make a challenge",
 )
-def new(year: int, day: int):
+def new(year: int, day: int) -> None:
     """Start a new challenge from a template. This command will create a
     new challenge file, the corresponding test file and will attempt to
     download the data."""
@@ -213,10 +212,14 @@ def new(year: int, day: int):
             default=False,
             abort=True,
         )
+    else:
+        challenge_filepath.parent.mkdir(parents=True, exist_ok=True)
     if test_filepath.exists():
         click.confirm(
             "Test file exists, do you want to overwrite?", default=False, abort=True
         )
+    else:
+        test_filepath.parent.mkdir(parents=True, exist_ok=True)
 
     # Get templates folder
     env = Environment(
@@ -263,7 +266,7 @@ def new(year: int, day: int):
     type=click.INT,
     help="If specified, only download the data for this particular day",
 )
-def download(year: int | None, day: int | None = None):
+def download(year: int | None, day: int | None = None) -> None:
     """Download data files from Avent of Code."""
 
     # Download only a single day
