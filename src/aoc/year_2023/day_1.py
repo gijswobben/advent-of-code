@@ -19,12 +19,17 @@ WRITTEN_DIGITS: dict[str, int] = {
 }
 
 
-def to_digits(line: str) -> list[int]:
+def to_digits(
+    line: str,
+    translate_written_digits: bool = False,
+) -> list[int]:
     """Convert a line to a list of digits.
 
     Args:
     ----
         line (str): The input line.
+        translate_written_digits (bool): Whether to translate written digits to
+            digits.
 
     Returns:
     -------
@@ -34,7 +39,7 @@ def to_digits(line: str) -> list[int]:
     for index, char in enumerate(line):
         if char.isdigit():
             digits.append(int(char))
-        else:
+        elif translate_written_digits:
             for word, digit in WRITTEN_DIGITS.items():
                 if line[index : index + len(word)] == word:
                     digits.append(digit)
@@ -68,7 +73,11 @@ def part_two(input_lines: list[str]) -> int:
     -------
         int: The result for assignment two.
     """
-    return part_one(input_lines)
+    digits_per_line = [
+        to_digits(line, translate_written_digits=True) for line in input_lines
+    ]
+    digits: list[int] = [int(f"{line[0]}{line[-1]}") for line in digits_per_line]
+    return sum(digits)
 
 
 if __name__ == "__main__":
