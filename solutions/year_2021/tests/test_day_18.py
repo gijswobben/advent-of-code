@@ -1,4 +1,4 @@
-# from aoc.year_2021.day_18 import part_one, part_two
+# from day_18 import part_one, part_two
 
 # TEST_INPUT: list[str] = [
 #     "[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]",

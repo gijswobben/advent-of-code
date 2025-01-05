@@ -1,4 +1,4 @@
-# from aoc.year_2021.day_12 import part_one, part_two
+# from day_12 import part_one, part_two
 
 # TEST_INPUT_ONE: list[str] = [
 #     "start-A",

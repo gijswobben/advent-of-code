@@ -1,4 +1,4 @@
-# from aoc.year_2021.day_21 import part_one, part_two
+# from day_21 import part_one, part_two
 
 # TEST_INPUT: list[str] = [
 #     "Player 1 starting position: 4",

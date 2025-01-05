@@ -1,4 +1,4 @@
-from aoc.year_2023.day_4 import part_one, part_two
+from day_4 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53",
@@ -12,13 +12,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one() -> None:
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 13
 
 
 def test_part_two() -> None:
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == 30

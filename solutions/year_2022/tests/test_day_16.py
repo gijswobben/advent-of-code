@@ -1,4 +1,4 @@
-from aoc.year_2022.day_16 import part_one, part_two
+from day_16 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB",
@@ -16,13 +16,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 1651
 
 
 def test_part_two():
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == 1707

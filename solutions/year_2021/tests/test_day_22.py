@@ -1,4 +1,4 @@
-# from aoc.year_2021.day_22 import part_one, part_two
+# from day_22 import part_one, part_two
 
 # TEST_INPUT: list[str] = [
 #     "on x=-20..26,y=-36..17,z=-47..7",

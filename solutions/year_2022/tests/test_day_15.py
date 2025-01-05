@@ -1,4 +1,4 @@
-from aoc.year_2022.day_15 import part_one, part_two
+from day_15 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "Sensor at x=8, y=7: closest beacon is at x=2, y=10",
@@ -20,13 +20,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT, y=10)
     assert result == 26
 
 
 def test_part_two():
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT, 20, 20)
     assert result == 56000011

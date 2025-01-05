@@ -1,4 +1,4 @@
-from aoc.year_2022.day_11 import part_one, part_two
+from day_11 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "Monkey 0:",
@@ -33,13 +33,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 10605
 
 
 def test_part_two():
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == 2713310158

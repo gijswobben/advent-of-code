@@ -1,4 +1,4 @@
-from aoc.year_2021.day_5 import part_one, part_two
+from day_5 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "0,9 -> 5,9",
@@ -16,13 +16,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 5
 
 
 def test_part_two():
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == 12

@@ -1,4 +1,4 @@
-from aoc.year_2022.day_10 import part_one, part_two
+from day_10 import part_one, part_two
 
 TEST_INPUT_SMALL: list[str] = [
     "noop",
@@ -158,7 +158,6 @@ TEST_INPUT: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 13140
 
@@ -175,6 +174,5 @@ PART_TWO_EXPECTED = """
 
 def test_part_two():
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == PART_TWO_EXPECTED.strip()

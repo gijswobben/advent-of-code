@@ -1,4 +1,4 @@
-# from aoc.year_2021.day_17 import part_one, part_two
+# from day_17 import part_one, part_two
 
 # TEST_INPUT: list[str] = [
 #     "target area: x=20..30, y=-10..-5",

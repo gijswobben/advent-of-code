@@ -1,4 +1,4 @@
-from aoc.year_2022.day_22 import Cube, Facing, Instructions, part_one, part_two
+from day_22 import Cube, Facing, Instructions, part_one, part_two
 
 TEST_INPUT: list[str] = [
     "        ...#",
@@ -237,7 +237,6 @@ EMPTY_CUBE_LARGE: list[str] = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 6032
 
@@ -252,7 +251,6 @@ def test_part_one():
 
 def test_faces() -> None:
     """Test all transitions by moving to the edge and take 1 step."""
-
     cube: Cube = Cube.from_text(EMPTY_CUBE_LARGE, 50)
     instructions = Instructions.from_text("1")
 

@@ -1,4 +1,4 @@
-from aoc.year_2022.day_2 import part_one, part_two
+from day_2 import part_one, part_two
 
 TEST_INPUT = [
     "A Y",
@@ -9,7 +9,6 @@ TEST_INPUT = [
 
 def test_part_one():
     """Test based on the example provided in the challenge."""
-
     score = part_one(TEST_INPUT)
     assert score == 15
 

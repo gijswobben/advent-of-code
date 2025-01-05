@@ -1,4 +1,4 @@
-from aoc.year_2023.day_5 import part_one, part_two
+from day_5 import part_one, part_two
 
 TEST_INPUT: list[str] = [
     "seeds: 79 14 55 13",
@@ -39,13 +39,11 @@ TEST_INPUT: list[str] = [
 
 def test_part_one() -> None:
     """Test based on the example provided in the challenge."""
-
     result = part_one(TEST_INPUT)
     assert result == 35
 
 
 def test_part_two() -> None:
     """Test based on the example provided in the challenge."""
-
     result = part_two(TEST_INPUT)
     assert result == 46
