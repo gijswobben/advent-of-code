@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "year-2024"
+version = "0.1.0"
+description = ""
+authors = ["X Y <x@y.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pytest = "^8.3.4"
+pydantic = "^2.10.3"
+numpy = "^2.2.0"
+rich = "^13.9.4"
+tqdm = "^4.67.1"
+networkx = "^3.4.2"
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F", "W", "C", "N", "D", "COM", "ASYNC", "I"]
+ignore = [
+    "D211", # 'no-blank-line-before-class'
+    "D213", # 'multi-line-summary-second-line'
+]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["C", "D", "COM", "I"]
+unfixable = []
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
