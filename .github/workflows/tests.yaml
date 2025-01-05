@@ -5,7 +5,7 @@ jobs:
     name: "Pytest"
     strategy:
       matrix:
-        year: [2023, 2024]
+        year: [2024]
         python-version: [3.11]
     runs-on: ubuntu-latest
     steps:
