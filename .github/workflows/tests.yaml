@@ -6,7 +6,6 @@ jobs:
     strategy:
       matrix:
         year: [2024]
-        python-version: [3.11]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -18,7 +17,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: poetry
 
       - name: Install dependencies
