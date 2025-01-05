@@ -15,6 +15,12 @@ rich = "^13.9.4"
 tqdm = "^4.67.1"
 networkx = "^3.4.2"
 
+[tool.poetry.group.dev.dependencies]
+pytest-cov = "^6.0.0"
+pytest = "^8.3.4"
+ruff = "^0.8.6"
+mypy = "^1.14.1"
+
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 select = ["E", "F", "W", "C", "N", "D", "COM", "ASYNC", "I"]
