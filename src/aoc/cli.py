@@ -6,7 +6,7 @@ from random import choice, randint, seed
 
 import browser_cookie3  # type: ignore
 import click
-import requests
+import httpx
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pyfiglet import Figlet  # type: ignore
 
@@ -19,7 +19,7 @@ DEFAULT_YEAR = NOW.year if NOW.month == 12 else NOW.year - 1
 DEFAULT_DAY = NOW.day if NOW.month == 12 and NOW.day <= 25 else 1
 
 # Get any cookies from a browser (any browser)
-COOKIE_JAR = browser_cookie3.load(domain_name=".adventofcode.com")
+# COOKIE_JAR = browser_cookie3.load()
 
 # Create the various components of the christmas tree in the banner
 BANNER_TREE_BOTTOM = click.style("^", fg="green")
@@ -33,6 +33,7 @@ FESTIVE_COLORS = ["red", "yellow", "blue", "cyan"]
 
 
 class TreeLayer(ABC):
+
     """Base class for layers in the christmas tree (banner)."""
 
     def __init__(self, width: int, max_width: int) -> None:
@@ -45,6 +46,7 @@ class TreeLayer(ABC):
 
 
 class BranchesLayer(TreeLayer):
+
     """A layer of branches in the christmas tree."""
 
     def __init__(self, width: int, max_width: int, n_lines: int = 2):
@@ -59,7 +61,7 @@ class BranchesLayer(TreeLayer):
                 if index != ornament_index
                 else click.style(BANNER_TREE_ORNAMENT, fg=choice(FESTIVE_COLORS))
                 for index in range(width)
-            ]
+            ],
         )
         spacing = " " * ((self.max_width - width) // 2)
         return (
@@ -71,11 +73,12 @@ class BranchesLayer(TreeLayer):
             [
                 self.create_line(width)
                 for width in range(self.width, (self.width + self.n_lines * 2), 2)
-            ]
+            ],
         )
 
 
 class TopLayer(TreeLayer):
+
     """The top ornament of the christmast tree."""
 
     def create_line(self) -> str:
@@ -87,11 +90,12 @@ class TopLayer(TreeLayer):
 
 
 class BottomLayer(TreeLayer):
+
     """The bottom layer of the tree, with the stump."""
 
     def create_line(self, width: int) -> str:
         spacing = " " * ((self.max_width - 2 - width) // 2)
-        bottom = BANNER_TREE_BOTTOM * (((width + 2)) // 2)
+        bottom = BANNER_TREE_BOTTOM * ((width + 2) // 2)
         return f"{spacing}{bottom}{BANNER_TREE_STUMP}{bottom}{spacing}"
 
     def to_string(self) -> str:
@@ -102,11 +106,14 @@ def get_banner(tree_levels: int = 4) -> str:
     """Create a festive banner for the CLI.
 
     Args:
+    ----
         tree_levels (int, optional): Number of levels on the christmas
             tree. Defaults to 4.
 
     Returns:
+    -------
         str: A banner as formatted text.
+
     """
     max_width = 2 * tree_levels + 1
 
@@ -124,7 +131,7 @@ def get_banner(tree_levels: int = 4) -> str:
     # Center align the tree
     spacing = (80 - max_width) // 2
     tree_text = "\n".join(
-        [f"{' ' * spacing}{line}" for line in tree_text.splitlines(keepends=False)]
+        [f"{' ' * spacing}{line}" for line in tree_text.splitlines(keepends=False)],
     )
 
     # Create the text of the banner
@@ -135,17 +142,19 @@ def get_banner(tree_levels: int = 4) -> str:
     return tree_text + "\n" + separator + "\n" + text
 
 
-def download_file(year: int, day: int) -> None:
+def download_file(year: int, day: int, output_path: Path) -> None:
     try:
-        os.makedirs(f"data/year_{year}", exist_ok=True)
-        r = requests.get(
-            f"https://adventofcode.com/{year}/day/{day}/input", cookies=COOKIE_JAR
+        os.makedirs(output_path / "data", exist_ok=True)
+        r = httpx.get(
+            f"https://adventofcode.com/{year}/day/{day}/input",
+            # cookies=COOKIE_JAR,
         )
         r.raise_for_status()
         click.echo(
-            click.style(f"Downloaded file for {year} day {day}", fg="green"), err=True
+            click.style(f"Downloaded file for {year} day {day}", fg="green"),
+            err=True,
         )
-        with open(f"data/year_{year}/day_{day}.txt", "wb") as f:
+        with open(output_path / "data" / f"day_{day}.txt", "wb") as f:
             f.write(r.content)
     except Exception as e:
         if (
@@ -194,16 +203,13 @@ def cli() -> None:
 def new(year: int, day: int) -> None:
     """Start a new challenge from a template. This command will create a
     new challenge file, the corresponding test file and will attempt to
-    download the data."""
-
+    download the data.
+    """
     # Get the paths
     templates_folder = Path(__file__).parents[2] / "templates"
-    challenge_filepath = (
-        Path(__file__).parents[2] / "src" / "aoc" / f"year_{year}" / f"day_{day}.py"
-    )
-    test_filepath = (
-        Path(__file__).parents[2] / "tests" / f"year_{year}" / f"test_day_{day}.py"
-    )
+    base_output_path = Path(__file__).parents[2] / "solutions" / f"year_{year}"
+    challenge_filepath = base_output_path / f"day_{day}.py"
+    test_filepath = base_output_path / "tests" / f"test_day_{day}.py"
 
     # Check if the path exists (confirm overwrite if they do)
     if challenge_filepath.exists():
@@ -216,7 +222,9 @@ def new(year: int, day: int) -> None:
         challenge_filepath.parent.mkdir(parents=True, exist_ok=True)
     if test_filepath.exists():
         click.confirm(
-            "Test file exists, do you want to overwrite?", default=False, abort=True
+            "Test file exists, do you want to overwrite?",
+            default=False,
+            abort=True,
         )
     else:
         test_filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -233,22 +241,22 @@ def new(year: int, day: int) -> None:
         f.write(challenge_template.render(year=year, day=day))
     click.echo(
         click.style(
-            f"Written challenge file template to {challenge_filepath.as_posix()}"
-        )
+            f"Written challenge file template to {challenge_filepath.as_posix()}",
+        ),
     )
 
     test_template = env.get_template("test_template.py.template")
     with open(test_filepath, "w") as f:
         f.write(test_template.render(year=year, day=day))
     click.echo(
-        click.style(f"Written test file template to {challenge_filepath.as_posix()}")
+        click.style(f"Written test file template to {challenge_filepath.as_posix()}"),
     )
 
-    # Download the dataset for this challenge (if it exists)
-    try:
-        download_file(year, day)
-    except Exception:
-        click.echo(click.style("Unable to download file", fg="red"), err=True)
+    # # Download the dataset for this challenge (if it exists)
+    # try:
+    #     download_file(year, day, output_path=base_output_path)
+    # except Exception:
+    #     click.echo(click.style("Unable to download file", fg="red"), err=True)
 
 
 @cli.command()
@@ -268,7 +276,6 @@ def new(year: int, day: int) -> None:
 )
 def download(year: int | None, day: int | None = None) -> None:
     """Download data files from Avent of Code."""
-
     # Download only a single day
     if day is not None and year is not None:
         try:

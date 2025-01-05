@@ -1,4 +1,4 @@
-from day_{{ day }} import part_one, part_two
+from day_3 import part_one, part_two
 
 TEST_INPUT: list[str] = []
 

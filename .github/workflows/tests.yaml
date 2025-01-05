@@ -3,6 +3,10 @@ name: Code quality
 jobs:
   unittests:
     name: "Pytest"
+    strategy:
+      matrix:
+        year: [2023, 2024]
+        python-version: [3.11]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -19,6 +23,8 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
+        working-directory: ./solutions/year_${{ matrix.year }}
 
       - name: Run tests
         run: poetry run pytest
+        working-directory: ./solutions/year_${{ matrix.year }}
